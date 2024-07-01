@@ -71,16 +71,35 @@ const newPath = path.join(newDir, 'file1.txt');
 const http = require('http');
 const server = http.createServer((req, res) =>{
     res.setHeader('Content-Type', 'text/html');
-    res.write('<html> <head> <title> node js class </title> </head> <body>');
-    res.write('<h1> Hello, World! </h1>');
-    res.write('</body></html>');
-    res.end();
+    if(req.url === '/login'){
+        res.write('<html> <head> <title> node js class </title> </head> <body>');
+        res.write('<h1> Hello, Login! </h1>');
+        res.write('</body></html>');
+        res.end();
+    }
+    else{
+        fs.readFile('index.html', (err, data)=>{
+            if (err) {
+                res.writeHead(500);
+                res.end('Error loading file');
+                return;
+            }
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+        });
+
+        // res.write('<html> <head> <title> node js class </title> </head> <body>');
+        // res.write('<h1> Hello, World! </h1>');
+        // res.write('</body></html>');
+    }
 })
 
-const port = 3000;
+const port = 3002;
 const host = 'localhost';
 
-server.listen(port, host, ()=> {
+server.listen(port, host, (err)=> {
+    if(err){
+        console.log(err);
+    }
     console.log(`Server is listening on http://${host}:${port}`);
 });
-
